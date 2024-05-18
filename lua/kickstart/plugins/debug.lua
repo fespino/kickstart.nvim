@@ -23,14 +23,17 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python',
   },
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local dpython = require 'dap-python'
 
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
+      automatic_setup = true,
       automatic_installation = true,
 
       -- You can provide additional configuration to the handlers,
@@ -42,6 +45,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'debugpy',
       },
     }
 
@@ -54,6 +58,11 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Breakpoint' })
+
+    -- Python
+    vim.keymap.set('n', '<leader>dpm', dpython.test_method, { desc = 'Debug: Python Test Method' })
+    vim.keymap.set('n', '<leader>dpc', dpython.test_class, { desc = 'Debug: Python Test Class' })
+    vim.keymap.set('v', '<leader>dps', dpython.debug_selection, { desc = 'Debug: Python Debug Selection' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -92,5 +101,7 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
+    -- Install python specific config
+    require('dap-python').setup()
   end,
 }
