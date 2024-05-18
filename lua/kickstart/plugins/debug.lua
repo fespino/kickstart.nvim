@@ -23,10 +23,12 @@ return {
 
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python',
   },
   keys = function(_, keys)
     local dap = require 'dap'
     local dapui = require 'dapui'
+    local dpython = require 'dap-python'
     return {
       -- Basic debugging keymaps, feel free to change to your liking!
       { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
@@ -43,6 +45,15 @@ return {
       },
       -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
       { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
+      --
+      -- TODO: Move to its own place.
+      --
+      -- Python Debug tools
+      { '<leader>dpm', dpython.test_method, desc = 'Debug: Python Test Method' },
+      { '<leader>dpc', dpython.test_class, desc = 'Debug: Python Test Class' },
+      { '<leader>dps', dpython.debug_selection, desc = 'Debug: Python Debug Selection', mode = { 'v' } },
+      -- TODO: //
+      --
       unpack(keys),
     }
   end,
@@ -53,6 +64,7 @@ return {
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
+      automatic_setup = true,
       automatic_installation = true,
 
       -- You can provide additional configuration to the handlers,
@@ -64,6 +76,7 @@ return {
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'debugpy',
       },
     }
 
@@ -101,5 +114,7 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
+    -- Install python specific config
+    require('dap-python').setup()
   end,
 }
