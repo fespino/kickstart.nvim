@@ -719,7 +719,6 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = false,
-      log_level = vim.log.levels.DEBUG,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
@@ -795,15 +794,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
-
-      -- For TailwindCSS colorizer
-      { 'roobert/tailwindcss-colorizer-cmp.nvim', config = true },
     },
-    opts = function(_, opts)
-      opts.formatting = {
-        format = require('tailwindcss-colorizer-cmp').formatter,
-      }
-    end,
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
