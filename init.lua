@@ -679,7 +679,7 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'volar', -- Used to format Vue and TS projects
-        'tsserver', -- Used to format Typescript projects
+        'ts_ls', -- Used to format Typescript projects
         'prettier', -- For most of the frontend code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
