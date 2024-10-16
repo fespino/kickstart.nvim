@@ -611,11 +611,9 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-
+        --
         -- # Python Servers
-
         pyright = {},
-
         -- Configure ruff_lsp.
         -- See: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#ruff_lsp
         -- For the default config, along with instructions on how to customize the settings
@@ -628,7 +626,6 @@ require('lazy').setup({
             client.server_capabilities.hoverProvider = false
           end,
         },
-
         -- / Python Servers
 
         -- rust_analyzer = {},
@@ -649,6 +646,7 @@ require('lazy').setup({
         volar = {
           filetypes = { 'vue', 'typescript', 'javascript' },
         },
+        tailwindcss = {},
         -- / JS/TS Servers
         --
         lua_ls = {
@@ -681,6 +679,8 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'volar', -- Used to format Vue and TS projects
+        'tsserver', -- Used to format Typescript projects
+        'prettier', -- For most of the frontend code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -719,6 +719,7 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = false,
+      log_level = vim.log.levels.DEBUG,
       format_on_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
@@ -740,8 +741,21 @@ require('lazy').setup({
         -- Conform can also run multiple formatters sequentially
         python = { 'isort', 'black' },
         --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
+        -- You can use a sub-list to tell conform to run *until* a formatter
+        -- is found.
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        vue = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+      },
+      formatter_configs = {
+        -- Use prettier local to the project
+        prettier = {
+          command = 'npx',
+          args = { 'prettier', '--stdin-filepath', '$FILENAME' },
+        },
       },
     },
   },
@@ -781,7 +795,15 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+
+      -- For TailwindCSS colorizer
+      { 'roobert/tailwindcss-colorizer-cmp.nvim', config = true },
     },
+    opts = function(_, opts)
+      opts.formatting = {
+        format = require('tailwindcss-colorizer-cmp').formatter,
+      }
+    end,
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
