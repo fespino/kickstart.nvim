@@ -461,7 +461,7 @@ require('lazy').setup({
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
-      'williamboman/mason-lspconfig.nvim',
+      { 'williamboman/mason-lspconfig.nvim', version = '805c31' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -619,7 +619,7 @@ require('lazy').setup({
         -- Configure ruff_lsp.
         -- See: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#ruff_lsp
         -- For the default config, along with instructions on how to customize the settings
-        ruff_lsp = {
+        ruff = {
           settings = {
             -- disable organize imports since we are using isort already
             organizeImports = false,
@@ -741,7 +741,7 @@ require('lazy').setup({
           lsp_format_opt = 'fallback'
         end
         return {
-          timeout_ms = 500,
+          timeout_ms = 2000, -- originally: 500
           lsp_format = lsp_format_opt,
         }
       end,
